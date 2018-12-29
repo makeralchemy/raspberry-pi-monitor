@@ -4,9 +4,9 @@
 # an Adafruit SSD1306 compatible display. The program uses four lines on the
 # display to show the hostname, IP address, CPU load, and memory usage. On the
 # far right of the first line, a heart icon blinks (aka a heart beat) to show
-# that the Raspberry Pi is running and not hung or stopped. When running in an
-# interactive session and terminated with Ctrl/C, the program will display the
-# number of heart beats recorded from the time the program was first started.
+# that the Raspberry Pi is running and not hung or stopped. When the program
+# is terminated, the number of heart beats recorded from the time the program
+# was first started will be displayed.
 
 # 'monitor.py' is based on sample code from Adafruit Industries.  Adafruit
 # copyright statement is included as requested by original author and Adafruit
@@ -36,6 +36,7 @@ import time
 import sys
 import argparse
 import subprocess
+import signal
 
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_SSD1306
@@ -44,8 +45,17 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
+run = True
+
+
+def handler_stop_signals(signum, frame):
+    global run
+    run = False
+
 
 def monitor_stats(heart_beat):
+
+    global run
 
     # Raspberry Pi pin configuration:
 
@@ -145,18 +155,29 @@ def monitor_stats(heart_beat):
     CMD_CPU_LOAD = "top -bn1 | grep load | awk '{printf \"CPU Load: %.2f\", $(NF-2)}'"
     CMD_MEM_USAGE = "free -m | awk 'NR==2{printf \"Mem: %s/%sMB %.2f%%\", $3,$2,$3*100/$2 }'"
 
-    try:
+    # setup handlers to catch when the script is stopped so the 'Monitor
+    # stopped' information can be displayed.
+    signal.signal(signal.SIGINT, handler_stop_signals)
+    signal.signal(signal.SIGQUIT, handler_stop_signals)
+    signal.signal(signal.SIGTERM, handler_stop_signals)
 
-        while True:
+    try:
+        while run:
 
             # Draw a black filled box to clear the image.
             draw.rectangle((0, 0, width, height), outline=0, fill=0)
 
             # Execute shell scripts to get system info
-            HostName = subprocess.check_output(CMD_HOSTNAME, shell=True)
-            IP = subprocess.check_output(CMD_IP_ADDR, shell=True)
-            CPU = subprocess.check_output(CMD_CPU_LOAD, shell=True)
-            MemUsage = subprocess.check_output(CMD_MEM_USAGE, shell=True)
+            try:
+                HostName = subprocess.check_output(CMD_HOSTNAME, shell=True)
+                IP = subprocess.check_output(CMD_IP_ADDR, shell=True)
+                CPU = subprocess.check_output(CMD_CPU_LOAD, shell=True)
+                MemUsage = subprocess.check_output(CMD_MEM_USAGE, shell=True)
+
+            # if CalledProcesError raised, stop the monitor
+            except subprocess.CalledProcessError:
+                run = False
+                break
 
             # draw a series of vertical lines to create the heart
             if display_heart:
@@ -191,20 +212,22 @@ def monitor_stats(heart_beat):
 
     except KeyboardInterrupt:
 
-        if heart_beats > 1000000:
-            str_heartbeats = ">1,000,000"
-        else:
-            str_heartbeats = format(heart_beats, ',')
-        str_heartbeats += " heartbeats"
+        run = False
 
-        # blank the display
-        draw.rectangle((0, 0, width, height), outline=0, fill=0)
+    if heart_beats > 1000000:
+        str_heartbeats = ">1,000,000"
+    else:
+        str_heartbeats = format(heart_beats, ',')
+    str_heartbeats += " heartbeats"
 
-        # display the number of heartbeats since the program was started
-        draw.text((x, top+8), "Monitor stopped after", font=font, fill=255)
-        draw.text((x, top+16), str_heartbeats, font=font, fill=255)
-        disp.image(image)
-        disp.display()
+    # blank the display
+    draw.rectangle((0, 0, width, height), outline=0, fill=0)
+
+    # display the number of heartbeats since the program was started
+    draw.text((x, top+8), "Monitor stopped after", font=font, fill=255)
+    draw.text((x, top+16), str_heartbeats, font=font, fill=255)
+    disp.image(image)
+    disp.display()
 
 
 if __name__ == "__main__":
