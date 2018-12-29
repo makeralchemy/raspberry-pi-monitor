@@ -1,3 +1,16 @@
+#!/usr/bin/python
+
+# 'monitor.py'is a Python program used to display Raspberry Pi system status on
+# an Adafruit SSD1306 compatible display. The program uses four lines on the
+# display to show the hostname, IP address, CPU load, and memory usage. On the
+# far right of the first line, a heart icon blinks (aka a heart beat) to show
+# that the Raspberry Pi is running and not hung or stopped. When running in an
+# interactive session and terminated with Ctrl/C, the program will display the
+# number of heart beats recorded from the time the program was first started.
+
+# 'monitor.py' is based on sample code from Adafruit Industries.  Adafruit
+# copyright statement is included as requested by original author and Adafruit
+
 # Copyright (c) 2017 Adafruit Industries
 # Author: Tony DiCola & James DeVito
 #
