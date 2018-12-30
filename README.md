@@ -24,19 +24,28 @@ mounted on the top of the case for the Pi's.  The hardware includes a 128x64 pix
     optional arguments
       -h, --help                   shows this help message and exit
       -b, --heartbeat HEARTBEAT    number of seconds between heart beats
+      -f, --freeze                 freeze the display when the program stops
 
 ### Command Line Examples
-Start the monitor using the default of 0.25 seconds between heart beats
+Start the monitor using the default of 0.25 seconds between heart beats. 
+When the program stops, display the number of heart beats while the program was running.
 
      $ python monitor.py
 
-Start the monitor with 0.5 seconds between heart beats:
+Start the monitor with 0.5 seconds between heart beats.
+When the program stops, display the number of heart beats while the program was running.
 
      $ python monitor.py -b 0.5
 
-Start the monitor with 2 seconds between heart beats:
+Start the monitor with 2 seconds between heart beats.
+Freeze the display with the system information when the program is stopped:
 
-     $ python monitor.py --heartbeat 2
+     $ python monitor.py --freeze --heartbeat 2
+
+Start the monitor with the default time between heart beats and freeze the display with
+the system information when the program is stopped:
+
+     $ python monitor.py -f
 
 ### Sample of displays
 
@@ -47,7 +56,7 @@ When running:
      CPU Load: 0.50
      Mem: 361/927MB 38.94%
 
-When stopped:
+When stopped and the freeze option not specified:
 
      Monitor stopped after
      3,422 heartbeats

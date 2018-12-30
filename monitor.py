@@ -53,7 +53,7 @@ def handler_stop_signals(signum, frame):
     run = False
 
 
-def monitor_stats(heart_beat):
+def monitor_stats(heart_beat, freeze_display_when_stopped):
 
     global run
 
@@ -214,25 +214,35 @@ def monitor_stats(heart_beat):
 
         run = False
 
-    if heart_beats > 1000000:
-        str_heartbeats = ">1,000,000"
-    else:
-        str_heartbeats = format(heart_beats, ',')
-    str_heartbeats += " heartbeats"
+    # check the command option to see if the display is to be
+    # frozen or blanked with a summary message when the monitoring
+    # is stopped.
+    if not freeze_display_when_stopped:
+        
+        # the option to clear the screen and display a summary
+        # message with the number of heart beats since the start
+        # of monitoring.
+        if heart_beats > 1000000:
+            str_heartbeats = ">1,000,000"
+        else:
+            str_heartbeats = format(heart_beats, ',')
+        str_heartbeats += " heartbeats"
 
-    # blank the display
-    draw.rectangle((0, 0, width, height), outline=0, fill=0)
+        # blank the display
+        draw.rectangle((0, 0, width, height), outline=0, fill=0)
 
-    # display the number of heartbeats since the program was started
-    draw.text((x, top+8), "Monitor stopped after", font=font, fill=255)
-    draw.text((x, top+16), str_heartbeats, font=font, fill=255)
-    disp.image(image)
-    disp.display()
+        # display the number of heartbeats since the program was started
+        draw.text((x, top+8), "Monitor stopped after", font=font, fill=255)
+        draw.text((x, top+16), str_heartbeats, font=font, fill=255)
+        disp.image(image)
+        disp.display()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-b", "--heartbeat", type=float, default=0.25,
                         help="number of seconds between heart beats")
+    parser.add_argument("-f", "--freeze",action='store_true',
+                        help='freeze the display when the program stops')
     args = parser.parse_args()
-    monitor_stats(args.heartbeat)
+    monitor_stats(args.heartbeat, args.freeze)
