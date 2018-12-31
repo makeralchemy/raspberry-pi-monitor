@@ -19,7 +19,7 @@ mounted on the top of the case for the Pi's.  The hardware includes a 128x64 pix
 
     $ python monitor.py -h
 
-    usage: monitor.py [-h] [-b HEARTBEAT]
+    usage: monitor.py [-h] [-b HEARTBEAT] [-f]
 
     optional arguments
       -h, --help                   shows this help message and exit
@@ -80,13 +80,31 @@ Create a directory for the monitor program:
 
      cd examples
      mkdir monitor
+     cd monitor
 
 Install the monitor code:
 
      git clone https://github.com/makeralchemy/raspberry-pi-monitor
 
+Make the program executable:
+
+     chmod +x monitor.py
+
+To make 'monitor.py' start upon boot, copy the service file into the systemd services directory:
+
+     sudo cp monitor.service /etc/systemd/system/monitor.service
+
+To start the monitoring service:
+
+     sudo systemctl start monitor.service
+
+To stop the monitoring service:
+
+     sudo systemctl stop monitor.service
+
+When you are satisfied that this starts and stops the monitoring program, it can be enabled to start automatically on reboot by using this command:
+
+     sudo systemctl enable monitor.service
+
 ## License
 This project is licensed under the MIT license.
-
-
-
