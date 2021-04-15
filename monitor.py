@@ -38,15 +38,12 @@ import argparse
 import subprocess
 import signal
 
-import Adafruit_GPIO.SPI as SPI
-import Adafruit_SSD1306
-
-from PIL import Image
-from PIL import ImageDraw
-from PIL import ImageFont
+from board import SCL, SDA
+import busio
+from PIL import Image, ImageDraw, ImageFont
+import adafruit_ssd1306
 
 run = True
-
 
 def handler_stop_signals(signum, frame):
     global run
@@ -57,56 +54,15 @@ def monitor_stats(heart_beat, freeze_display_when_stopped):
 
     global run
 
-    # Raspberry Pi pin configuration:
+    # Create the I2C interface
+    i2c = busio.I2C(SCL, SDA)
 
-    # On the PiOLED the RST pin is not used
-    RST = None
-
-    # The following are only used with SPI:
-    DC = 23
-    SPI_PORT = 0
-    SPI_DEVICE = 0
-
-    # Beaglebone Black pin configuration:
-    # RST = 'P9_12'
-    # The following are only used with SPI:
-    # DC = 'P9_15'
-    # SPI_PORT = 1
-    # SPI_DEVICE = 0
-
-    # 128x32 display with hardware I2C:
-    disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)
-
-    # 128x64 display with hardware I2C:
-    # disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST)
-
-    # You can change the I2C address by passing an i2c_address parameter like:
-    # disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST, i2c_address=0x3C)
-
-    # Alternatively you can specify an explicit I2C bus number, for example
-    # with the 128x32 display you would use:
-    # disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST, i2c_bus=2)
-
-    # 128x32 display with hardware SPI:
-    # disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST, dc=DC,
-    #        spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=8000000))
-
-    # 128x64 display with hardware SPI:
-    # disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST, dc=DC,
-    #        spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=8000000))
-
-    # Alternatively you can specify a software SPI implementation by providing
-    # digital GPIO pin numbers for all the required display pins.  For example
-    # on a Raspberry Pi with the 128x32 display you might use:
-    # disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST, dc=DC, sclk=18, din=25,
-    #        cs=22)
-
-    # Initialize library.
-    disp.begin()
+    # create SSD1306 class for 128x32 display with hardware I2C
+    disp = adafruit_ssd1306.SSD1306_I2C(128, 32, i2c)
 
     # Clear display.
-    disp.clear()
-    disp.display()
+    disp.fill(0)
+    disp.show()
 
     # Create blank image for drawing.
     # Make sure to create image with mode '1' for 1-bit color.
@@ -169,10 +125,10 @@ def monitor_stats(heart_beat, freeze_display_when_stopped):
 
             # Execute shell scripts to get system info
             try:
-                HostName = subprocess.check_output(CMD_HOSTNAME, shell=True)
-                IP = subprocess.check_output(CMD_IP_ADDR, shell=True)
-                CPU = subprocess.check_output(CMD_CPU_LOAD, shell=True)
-                MemUsage = subprocess.check_output(CMD_MEM_USAGE, shell=True)
+                HostName = subprocess.check_output(CMD_HOSTNAME, shell=True).decode("utf-8")
+                IP = subprocess.check_output(CMD_IP_ADDR, shell=True).decode("utf-8")
+                CPU = subprocess.check_output(CMD_CPU_LOAD, shell=True).decode("utf-8")
+                MemUsage = subprocess.check_output(CMD_MEM_USAGE, shell=True).decode("utf-8")
 
             # if CalledProcesError raised, stop the monitor
             except subprocess.CalledProcessError:
@@ -207,7 +163,7 @@ def monitor_stats(heart_beat, freeze_display_when_stopped):
 
             # display the image
             disp.image(image)
-            disp.display()
+            disp.show()
             time.sleep(heart_beat)
 
     except KeyboardInterrupt:
@@ -235,7 +191,7 @@ def monitor_stats(heart_beat, freeze_display_when_stopped):
         draw.text((x, top+8), "Monitor stopped after", font=font, fill=255)
         draw.text((x, top+16), str_heartbeats, font=font, fill=255)
         disp.image(image)
-        disp.display()
+        disp.show()
 
 
 if __name__ == "__main__":
