@@ -9,7 +9,7 @@ When the program is terminated, the number of heart beats recorded from the time
 This program was inspired by my building a Raspberry Pi cluster and wanting to have a way to to monitor the status of each Pi in the cluster on a set of small OLED displays
 mounted on the top of the case for the Pi's.  The hardware includes a 128x64 pixel OLED display connected to each Raspberry Pi via I2C.  The displays are Adafruit SSD1306 compatible.
 
-*monitor.py* was written for Python 2.7.x.
+*monitor.py* was written for Python 3.7.x.
 
 ## Usage Instructions
 
@@ -63,18 +63,27 @@ When stopped and the freeze option not specified:
 
 ## Installation Instructions
 
-When configuring the Raspian on the Raspberry Pi using the command "sudo raspi-config", make sure to enable the I2C interface.
+Before installing the libraries, you should run the standard updates:
 
-The following libraries may already be installed but these commands should be run anyways to ensure the libraries are there:
+     sudo apt-get update
+     sudo apt-get upgrade
+     sudo pip3 install --upgrade setuptools
+     
+If the last command above doesn't work, try:
 
-     sudo apt-get install python-dev
-     sudo apt-get install -y python-imaging python-smbus i2c-tools
+     sudo apt-get install python3-pip 
+     
+Adafruit provides a script to ensure the Raspberry Pi is correctly configured and installs the Blinka library. 
+Blinka brings CircuitPython APIs and CircuitPython libraries to single board computers (SBCs) for cross platform portability.
+It requires just a few commands to run. Most of it is installing the dependencies.     
+     
+     cd ~
+     sudo pip3 install --upgrade adafruit-python-shell
+     wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
+     sudo python3 raspi-blinka.py
 
-To install the required Adafruit libraries for SSD1306 based displays, run these commands:
-
-     git clone https://github.com/adafruit/Adafruit_Python_SSD1306.git
-     cd Adafruit_Python_SSD1306
-     sudo python setup.py install
+When configuring the Raspian on the Raspberry Pi using the command "sudo raspi-config", make sure to enable the I2C interface. 
+More details on enabling and checking the I2C interface can be found in this (Adafruit tutorial)[https://adafru.it/Deo]. 
 
 Create a directory for the monitor program:
 
