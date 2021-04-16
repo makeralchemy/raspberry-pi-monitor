@@ -17,7 +17,7 @@ mounted on the top of the case for the Pi's.  The hardware includes a 128x64 pix
 
 ### Command Line Usage:
 
-    $ python monitor.py -h
+    $ python3 monitor.py -h
 
     usage: monitor.py [-h] [-b HEARTBEAT] [-f]
 
@@ -30,22 +30,22 @@ mounted on the top of the case for the Pi's.  The hardware includes a 128x64 pix
 Start the monitor using the default of 0.25 seconds between heart beats. 
 When the program stops, display the number of heart beats while the program was running.
 
-     $ python monitor.py
+     $ python3 monitor.py
 
 Start the monitor with 0.5 seconds between heart beats.
 When the program stops, display the number of heart beats while the program was running.
 
-     $ python monitor.py -b 0.5
+     $ python3 monitor.py -b 0.5
 
 Start the monitor with 2 seconds between heart beats.
 Freeze the display with the system information when the program is stopped:
 
-     $ python monitor.py --freeze --heartbeat 2
+     $ python3 monitor.py --freeze --heartbeat 2
 
 Start the monitor with the default time between heart beats and freeze the display with
 the system information when the program is stopped:
 
-     $ python monitor.py -f
+     $ python3 monitor.py -f
 
 ### Sample of displays
 
