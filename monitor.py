@@ -88,11 +88,8 @@ def monitor_stats(heart_beat, freeze_display_when_stopped):
     # Load default font.
     font = ImageFont.load_default()
 
-    # Alternatively load a TTF font.  Make sure the .ttf font file is in the
-    # same directory as the python script!
-
-    # Some other nice fonts to try: http://www.dafont.com/bitmap.php
-    # font = ImageFont.truetype('Minecraftia.ttf', 8)
+    # Load an alternative nice font
+    # font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 9)
 
     # 'display_heart' will change from flip back and forth from true to false
     # during each loop in order to show the heart on the display - making it
