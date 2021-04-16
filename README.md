@@ -87,13 +87,16 @@ More details on enabling and checking the I2C interface can be found at https://
 
 Create a directory for the monitor program:
 
-     cd examples
-     mkdir monitor
+     mkdir monitor     
      cd monitor
 
 Install the monitor code:
 
      git clone https://github.com/makeralchemy/raspberry-pi-monitor
+
+Go to the directory of where the code is now stored:
+
+     cd raspberry-pi-monitor
 
 Make the program executable:
 
