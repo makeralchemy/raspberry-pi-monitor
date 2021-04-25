@@ -85,6 +85,10 @@ It requires just a few commands to run. Most of it is installing the dependencie
 When configuring the Raspian on the Raspberry Pi using the command "sudo raspi-config", make sure to enable the I2C interface. 
 More details on enabling and checking the I2C interface can be found at https://adafru.it/Deo.
 
+Install the library for the Adafruit 128x32 Mini OLED:
+
+      sudo pip3 install adafruit-circuitpython-ssd1306
+
 Create a directory for the monitor program (if you want to put the code in a different location and use systemd to automatically
 start the minitor upon boot, you'll need to update the 'monitor.service' file to reflect the location of the code):
 
