@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 ExecStart=/usr/bin/python3 monitor.py
-WorkingDirectory=/home/pi/monitor/raspberry-pi-monitor/
+WorkingDirectory=/home/pi/raspberry-pi-monitor/
 
 [Install]
 WantedBy=multi-user.target
