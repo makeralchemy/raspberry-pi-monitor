@@ -89,12 +89,6 @@ Install the library for the Adafruit 128x32 Mini OLED:
 
       sudo pip3 install adafruit-circuitpython-ssd1306
 
-Create a directory for the monitor program (if you want to put the code in a different location and use systemd to automatically
-start the minitor upon boot, you'll need to update the 'monitor.service' file to reflect the location of the code):
-
-     mkdir monitor     
-     cd monitor
-
 Install the monitor code:
 
      git clone https://github.com/makeralchemy/raspberry-pi-monitor
