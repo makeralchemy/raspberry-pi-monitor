@@ -101,7 +101,7 @@ Make the program executable:
 
      chmod +x monitor.py
 
-To make 'monitor.py' start upon boot, copy the service file into the systemd services directory:
+To make 'monitor.py' start upon boot, copy the service file into the systemd services directory (make sure the path to 'monitor.py' correctly matches where you stored the file):
 
      sudo cp monitor.service /etc/systemd/system/monitor.service
 
